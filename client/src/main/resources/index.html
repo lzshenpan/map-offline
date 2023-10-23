@@ -1,0 +1,64 @@
+<!--
+ * @Author: arbiterPan
+ * @Date: 2023-10-23 14:10:45
+ * @LastEditTime : 2020-01-09 14:43:10
+ * @LastEditors  : Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \mapdownload\src\main\resources\index.html
+ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>Map</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <script src='/mapbox-gl.js'></script>
+  <script src='/mapbox-gl-language.js'></script>
+  <link href='/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <script>
+    var bounds=$bounds$;
+    var map = new mapboxgl.Map({
+      container: 'map',
+      center:$center$,
+      zoom:$zoom$,
+      minZoom:$minZoom$,
+      maxZoom:$maxZoom$,
+      maxBounds: bounds
+    });
+    map._requestManager.normalizeSpriteURL = function (url, format, extension, accessToken) {
+      returl = url + format + extension;
+      return returl;
+    };
+    map._requestManager.canonicalizeTileset = function (tileJSON, sourceURL) {
+      for (i = 0; i < tileJSON.tiles.length; i++) {
+        tileJSON.tiles[i] = window.location.protocol + '//' + window.location.host + tileJSON.tiles[i];
+      }
+      return tileJSON.tiles || [];
+    };
+    map.setStyle('/style.json');
+    mapboxgl.setRTLTextPlugin('/mapbox-gl-rtl-text.js');
+    map.addControl(new MapboxLanguage({
+            defaultLanguage: 'zh'
+        }));
+  </script>
+
+</body>
+
+</html>
